@@ -386,31 +386,3 @@ for(i in 1:length(cogapsRes10)) {
   }
   dev.off()
 }
-
-
-
-
-
-##i think this can be deleted
-library("readxl")
-genes <- read_excel("/Users/ryanpalaganas/Downloads/SynGoAnalysisOverall.xlsx")
-genes <- genes$`gene symbol`
-str(genes)
-genes <- genes[0:353]
-
-measures <- list("genes"=genes)
-genes
-
-cogapsRes<-unlist(cogapsRes)
-cogapsRes
-
-calcCoGAPSStat(
-  cogapsRes,
-  sets = measures,
-  whichMatrix = "featureLoadings",
-  numPerm = 1000
-  #GStoGenes = genes
-)
-
-class(cogapsRes)<-"CogapsResult"
-
