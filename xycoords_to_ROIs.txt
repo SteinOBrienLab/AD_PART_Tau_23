@@ -1,0 +1,31 @@
+// Clear ROI Manager if needed
+if (roiManager("count") > 0) {
+    roiManager("reset");
+}
+
+// Read CSV file with x,y coordinates
+path = File.openDialog("Select CSV file");
+lines = split(File.openAsString(path), "\n");
+
+// Initialize arrays
+xpoints = newArray(lines.length-1);  // -1 to skip header
+ypoints = newArray(lines.length-1);
+
+// Parse CSV lines
+for (i=1; i<lines.length; i++) {  // Start at 1 to skip header
+    columns = split(lines[i], ",");
+    xpoints[i-1] = parseInt(columns[0]);
+    ypoints[i-1] = parseInt(columns[1]);
+}
+
+// Create point selection and add to ROI Manager
+makeSelection("point", xpoints, ypoints);
+roiManager("Add");
+roiManager("Select", 0);
+roiManager("Rename", "Imported Points");
+
+// Optional: Show All points
+roiManager("Show All");
+
+// Optional: Save ROIs
+//roiManager("Save", "/path/to/save/ROIs.zip");

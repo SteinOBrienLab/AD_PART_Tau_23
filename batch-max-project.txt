@@ -1,0 +1,49 @@
+// ImageJ macro to create maximum intensity projections for all images in a folder
+
+macro "Batch Max Project" {
+    // Get input/output directories
+    input = getDirectory("Choose Input Directory");
+    output = getDirectory("Choose Output Directory");
+    
+    // Get list of files
+    list = getFileList(input);
+    
+    // Create output directory if it doesn't exist
+    File.makeDirectory(output);
+    
+    // Counter for processed files
+    count = 0;
+    
+    // Process all files
+    setBatchMode(true); // Run in batch mode for speed
+    for (i=0; i<list.length; i++) {
+        if (endsWith(list[i], ".tif") || endsWith(list[i], ".tiff")) {
+            // Show progress
+            showProgress(i+1, list.length);
+            print("Processing: " + list[i]);
+            
+            // Open image
+            open(input + list[i]);
+            
+            // Get original filename without extension
+            filename = File.nameWithoutExtension;
+            
+            // Create max projection
+            run("Z Project...", "projection=[Max Intensity]");
+            
+            // Save the projection
+            saveAs("Tiff", output + filename + "_MAX.tif");
+            
+            // Clean up
+            close("*");
+            
+            count++;
+        }
+    }
+    setBatchMode(false);
+    
+    // Report completion
+    print("\nProcessing complete!");
+    print("Processed " + count + " files");
+    print("Max projections saved to: " + output);
+}
